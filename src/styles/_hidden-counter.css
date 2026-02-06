@@ -1,8 +1,8 @@
 @import './_variables.css';
 
-.mine-counter {
+.hidden-counter {
   background-color: #000;
-  color: var(--color-red);
+  color: var(--color-yellow);
   font-family: var(--font-pixel);
   font-size: 14px;
   padding: 4px 8px;
@@ -13,18 +13,14 @@
   text-align: center;
 }
 
-.mine-counter__label {
+.hidden-counter__label {
   font-size: 10px;
-  color: var(--color-red);
+  color: var(--color-window-light);
   margin-bottom: 2px;
   font-family: var(--font-retro);
 }
 
-.mine-counter__value {
+.hidden-counter__value {
   font-size: 16px;
   letter-spacing: 2px;
-}
-
-.mine-counter--negative .mine-counter__value {
-  color: var(--color-red);
 }

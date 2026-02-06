@@ -4,8 +4,9 @@ import { ControlsComponent } from './components/Controls.js';
 import { CounterComponent } from './components/Counter.js';
 import { TimerComponent } from './components/Timer.js';
 import { GameStatusComponent } from './components/GameStatus.js';
+import { HiddenCounterComponent } from './components/HiddenCounter.js';
 import { Game } from './game/Game.js';
-import { DIFFICULTY } from './utils/constants.js';
+import { DIFFICULTY, CELL_STATE } from './utils/constants.js';
 
 class App {
   constructor() {
@@ -13,7 +14,8 @@ class App {
     this.counter = new CounterComponent(0);
     this.timer = new TimerComponent(0);
     this.gameStatus = new GameStatusComponent(() => this.reset());
-    this.header = new HeaderComponent(this.counter, this.timer, this.gameStatus);
+    this.hiddenCounter = new HiddenCounterComponent();
+    this.header = new HeaderComponent(this.counter, this.timer, this.gameStatus, this.hiddenCounter);
     this.board = null;
     this.controls = new ControlsComponent((difficulty) => this.changeDifficulty(difficulty));
     this.appElement = document.getElementById('app');
@@ -76,6 +78,7 @@ class App {
     this.appElement.appendChild(gameWindow);
 
     this.counter.setValue(this.game.board.totalMines);
+    this.hiddenCounter.setValue(this.game.board.rows * this.game.board.cols - this.game.board.totalMines);
     this.timer.reset();
     this.gameStatus.setStatus('playing');
   }
@@ -83,6 +86,7 @@ class App {
   bindGameEvents() {
     this.game.on('init', (stats) => {
       this.counter.setValue(stats.totalMines);
+      this.hiddenCounter.setValue(stats.rows * stats.cols - stats.totalMines);
       this.timer.reset();
       this.gameStatus.setStatus('playing');
     });
@@ -90,23 +94,32 @@ class App {
     this.game.on('click', (result) => {
       if (result.type === 'reveal') {
         this.board.revealCells(result.revealed);
+        const stats = this.game.board.getStats();
+        const hiddenNonMines = stats.hiddenCount - (this.game.board.totalMines - stats.flaggedCount);
+        this.hiddenCounter.setValue(Math.max(0, hiddenNonMines));
       }
     });
 
     this.game.on('flag', (result) => {
       if (result.type === 'flag') {
         this.board.updateCell(result.cell.row, result.cell.col);
-        this.counter.setValue(result.flaggedCount);
+        const remainingMines = this.game.board.totalMines - result.flaggedCount;
+        this.counter.setValue(remainingMines);
       }
     });
 
     this.game.on('gameover', (result) => {
       if (result.won) {
         this.gameStatus.setStatus('won');
-        this.revealAllCells();
+        const revealResult = this.game.board.revealAllMines();
+        this.board.revealCells(revealResult.safeCells);
+        this.hiddenCounter.setValue(0);
       } else {
         this.gameStatus.setStatus('lost');
-        this.board.revealCells([result.explodedCell]);
+        const revealResult = this.game.board.revealAllMines();
+        this.board.revealCells(revealResult.mines);
+        this.board.revealCells(revealResult.safeCells);
+        this.board.revealCells(revealResult.wrongFlags);
       }
     });
 
@@ -180,7 +193,7 @@ class App {
     for (let r = 0; r < this.game.board.rows; r++) {
       for (let c = 0; c < this.game.board.cols; c++) {
         const cell = this.game.board.getCell(r, c);
-        if (cell.state === 'hidden' && cell.hasMine) {
+        if (cell.state === CELL_STATE.HIDDEN && cell.hasMine) {
           this.board.updateCell(r, c);
         }
       }

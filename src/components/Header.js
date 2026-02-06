@@ -1,8 +1,9 @@
 export class HeaderComponent {
-  constructor(counter, timer, gameStatus) {
+  constructor(counter, timer, gameStatus, hiddenCounter) {
     this.counter = counter;
     this.timer = timer;
     this.gameStatus = gameStatus;
+    this.hiddenCounter = hiddenCounter;
     this.element = this.createElement();
   }
 
@@ -17,6 +18,7 @@ export class HeaderComponent {
     const centerSection = document.createElement('div');
     centerSection.className = 'header__section';
     centerSection.appendChild(this.gameStatus.getElement());
+    centerSection.appendChild(this.hiddenCounter.getElement());
     
     const rightSection = document.createElement('div');
     rightSection.className = 'header__section';

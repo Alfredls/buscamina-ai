@@ -7,20 +7,18 @@ export class CounterComponent {
 
   createElement() {
     const div = document.createElement('div');
-    div.className = 'counter';
+    div.className = 'mine-counter';
+    div.innerHTML = `
+      <div class="mine-counter__label">BOMBAS</div>
+      <div class="mine-counter__value">000</div>
+    `;
     return div;
   }
 
   updateDisplay() {
     const display = Math.max(-99, Math.min(999, this.value));
     const text = display.toString().padStart(3, '0');
-    this.element.textContent = text.startsWith('-') ? text : text;
-    
-    if (this.value < 0) {
-      this.element.classList.add('counter--negative');
-    } else {
-      this.element.classList.remove('counter--negative');
-    }
+    this.element.querySelector('.mine-counter__value').textContent = text;
   }
 
   setValue(value) {

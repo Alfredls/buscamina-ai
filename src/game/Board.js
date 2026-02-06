@@ -57,6 +57,7 @@ export class Board {
   }
 
   clickCell(row, col) {
+    if (!this.isValidCell(row, col)) return null;
     if (this.gameOver) return null;
     
     const cell = this.grid[row][col];
@@ -72,7 +73,8 @@ export class Board {
       cell.explode();
       this.gameOver = true;
       this.status = GAME_STATUS.LOST;
-      return { type: 'explosion', cell };
+      const adjacentMines = this.getAdjacentMinesCross(row, col);
+      return { type: 'explosion', cell, adjacentMines };
     }
     
     const revealed = this.revealCell(row, col);
@@ -84,6 +86,30 @@ export class Board {
     }
     
     return { type: 'reveal', revealed };
+  }
+
+  getAdjacentMinesCross(row, col) {
+    const adjacent = [];
+    const directions = [
+      [-1, 0], // arriba
+      [1, 0],  // abajo
+      [0, -1], // izquierda
+      [0, 1]   // derecha
+    ];
+    
+    for (const [dr, dc] of directions) {
+      const nr = row + dr;
+      const nc = col + dc;
+      if (nr >= 0 && nr < this.rows && nc >= 0 && nc < this.cols) {
+        const neighbor = this.grid[nr][nc];
+        if (neighbor.hasMine) {
+          neighbor.state = CELL_STATE.REVEALED;
+          adjacent.push(neighbor);
+        }
+      }
+    }
+    
+    return adjacent;
   }
 
   revealCell(row, col) {
@@ -108,6 +134,7 @@ export class Board {
   }
 
   flagCell(row, col) {
+    if (!this.isValidCell(row, col)) return null;
     if (this.gameOver) return null;
     
     const cell = this.grid[row][col];
@@ -133,18 +160,35 @@ export class Board {
     return this.grid[row]?.[col] || null;
   }
 
-  revealAllMines(exceptFlagged = true) {
-    const revealed = [];
+  revealAllMines() {
+    const result = {
+      mines: [],
+      safeCells: [],
+      wrongFlags: []
+    };
+
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         const cell = this.grid[r][c];
-        if (cell.hasMine && (!exceptFlagged || !cell.hasFlag())) {
-          cell.state = CELL_STATE.REVEALED;
-          revealed.push(cell);
+        
+        if (cell.hasMine) {
+          if (!cell.hasFlag()) {
+            cell.state = CELL_STATE.REVEALED;
+            result.mines.push(cell);
+          }
+        } else {
+          if (cell.hasFlag()) {
+            cell.state = CELL_STATE.REVEALED;
+            result.wrongFlags.push(cell);
+          } else if (cell.state === CELL_STATE.HIDDEN) {
+            cell.state = CELL_STATE.REVEALED;
+            result.safeCells.push(cell);
+          }
         }
       }
     }
-    return revealed;
+
+    return result;
   }
 
   getStats() {
@@ -157,5 +201,11 @@ export class Board {
       status: this.status,
       isGameOver: this.gameOver
     };
+  }
+
+  isValidCell(row, col) {
+    return typeof row === 'number' && typeof col === 'number' &&
+           row >= 0 && row < this.rows &&
+           col >= 0 && col < this.cols;
   }
 }

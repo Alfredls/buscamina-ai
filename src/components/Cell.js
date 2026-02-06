@@ -52,6 +52,9 @@ export class CellComponent {
         if (this.cell.hasMine) {
           this.element.classList.add('cell--mine');
           this.element.textContent = ICONS.MINE;
+        } else if (this.cell.hasFlag()) {
+          this.element.classList.add('cell--wrong-flag');
+          this.element.textContent = '❌';
         } else if (this.cell.adjacentMines > 0) {
           this.element.classList.add(`cell--${this.cell.adjacentMines}`);
           this.element.textContent = NUMBERS[this.cell.adjacentMines];

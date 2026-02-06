@@ -39,6 +39,11 @@
   color: var(--color-flag);
 }
 
+.cell--wrong-flag {
+  background-color: #ff6b6b;
+  color: #000;
+}
+
 .cell--mine {
   background-color: var(--color-mine);
 }
