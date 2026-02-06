@@ -1,0 +1,17 @@
+{
+  "name": "buscamina-retro",
+  "version": "1.0.0",
+  "description": "Un buscamina retro estilo Windows 95/XP construido con Vanilla JS y Vite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  },
+  "keywords": ["minesweeper", "game", "retro", "vanilla-js", "vite"],
+  "author": "",
+  "license": "MIT"
+}

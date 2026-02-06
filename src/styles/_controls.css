@@ -1,0 +1,39 @@
+@import './_game-window.css';
+@import './_header.css';
+@import './_counter.css';
+@import './_timer.css';
+@import './_game-status.css';
+@import './_board.css';
+@import './_cell.css';
+@import './_controls.css';
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.controls__btn {
+  padding: 6px 16px;
+  font-family: var(--font-retro);
+  font-size: 14px;
+  background-color: var(--color-window);
+  border: 2px solid var(--color-window-light);
+  border-right-color: var(--color-window-dark);
+  border-bottom-color: var(--color-window-dark);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.controls__btn:active {
+  border-color: var(--color-window-dark);
+  border-right-color: var(--color-window-light);
+  border-bottom-color: var(--color-window-light);
+  transform: scale(0.98);
+}
+
+.controls__btn--active {
+  background-color: var(--color-window-dark);
+  color: var(--color-window-light);
+}

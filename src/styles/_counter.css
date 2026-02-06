@@ -1,0 +1,19 @@
+@import './_variables.css';
+
+.counter {
+  background-color: #000;
+  color: var(--color-red);
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  padding: 4px 8px;
+  border: 2px solid var(--color-window-dark);
+  border-right-color: var(--color-window-light);
+  border-bottom-color: var(--color-window-light);
+  min-width: 60px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.counter--negative {
+  color: var(--color-red);
+}

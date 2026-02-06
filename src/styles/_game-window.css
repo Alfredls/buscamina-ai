@@ -1,0 +1,54 @@
+@import './_variables.css';
+
+.game-window {
+  background-color: var(--color-window);
+  border: 2px solid var(--color-window-light);
+  border-right-color: var(--color-window-dark);
+  border-bottom-color: var(--color-window-dark);
+  padding: 4px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.game-window__title-bar {
+  background: linear-gradient(90deg, var(--color-blue-dark), var(--color-blue-light));
+  color: white;
+  padding: 4px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.game-window__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.game-window__controls {
+  display: flex;
+  gap: 4px;
+}
+
+.game-window__btn {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--color-window-light);
+  border-right-color: var(--color-window-dark);
+  border-bottom-color: var(--color-window-dark);
+  background-color: var(--color-window);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.game-window__btn:active {
+  border-color: var(--color-window-dark);
+  border-right-color: var(--color-window-light);
+  border-bottom-color: var(--color-window-light);
+}

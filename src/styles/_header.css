@@ -1,0 +1,19 @@
+@import './_variables.css';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: var(--color-window);
+  border: 2px solid var(--color-window-dark);
+  border-right-color: var(--color-window-light);
+  border-bottom-color: var(--color-window-light);
+}
+
+.header__section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

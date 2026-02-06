@@ -1,0 +1,35 @@
+@import './_variables.css';
+
+.game-status {
+  padding: 4px 12px;
+  border: 2px solid var(--color-window-dark);
+  border-right-color: var(--color-window-light);
+  border-bottom-color: var(--color-window-light);
+  background-color: var(--color-window);
+  cursor: pointer;
+  font-size: 20px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+}
+
+.game-status:active {
+  border-color: var(--color-window-dark);
+  border-right-color: var(--color-window-dark);
+  border-bottom-color: var(--color-window-dark);
+  transform: scale(0.95);
+}
+
+.game-status--playing {
+  background-color: var(--color-window);
+}
+
+.game-status--won {
+  color: var(--color-green);
+}
+
+.game-status--lost {
+  color: var(--color-red);
+}

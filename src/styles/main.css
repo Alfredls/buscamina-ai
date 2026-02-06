@@ -1,0 +1,9 @@
+@import './_variables.css';
+@import './_game-window.css';
+@import './_header.css';
+@import './_counter.css';
+@import './_timer.css';
+@import './_game-status.css';
+@import './_board.css';
+@import './_cell.css';
+@import './_controls.css';

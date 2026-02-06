@@ -1,0 +1,46 @@
+:root {
+  --color-bg: #008080;
+  --color-window: #c0c0c0;
+  --color-window-dark: #808080;
+  --color-window-light: #ffffff;
+  --color-window-text: #000000;
+  --color-blue-dark: #000080;
+  --color-blue-light: #1084d0;
+  --color-red: #ff0000;
+  --color-green: #00ff00;
+  --color-yellow: #ffff00;
+  --color-orange: #ffa500;
+  --color-cell-hidden: #c0c0c0;
+  --color-cell-revealed: #d4d4d4;
+  --color-mine: #ff0000;
+  --color-flag: #ff0000;
+  --shadow-outer: inset -2px -2px 0 var(--color-window-dark), inset 2px 2px 0 var(--color-window-light);
+  --shadow-inner: inset 2px 2px 0 var(--color-window-dark), inset -2px -2px 0 var(--color-window-light);
+  --shadow-pressed: inset 2px 2px 0 var(--color-window-dark), inset -2px -2px 0 var(--color-window-light);
+  --font-retro: 'Courier New', Courier, monospace;
+  --font-pixel: 'Press Start 2P', cursive, monospace;
+  --border-radius: 4px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-retro);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
