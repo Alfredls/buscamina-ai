@@ -56,5 +56,15 @@ export function countHiddenCells(board) {
 }
 
 export function checkWinCondition(board, totalMines) {
-  return countHiddenCells(board) === totalMines;
+  const hiddenCount = countHiddenCells(board);
+  return hiddenCount === totalMines;
+}
+
+export function checkAllFlagsCorrect(board, totalMines) {
+  const flaggedCount = countFlaggedCells(board);
+  if (flaggedCount !== totalMines) return false;
+
+  return board.flat().every(cell =>
+    cell.hasFlag() ? cell.hasMine : true
+  );
 }

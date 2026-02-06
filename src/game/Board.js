@@ -1,8 +1,9 @@
 import { Cell } from './Cell.js';
-import { 
+import {
   countAdjacentMines,
   getNeighbors,
-  checkWinCondition
+  checkWinCondition,
+  checkAllFlagsCorrect
 } from '../utils/helpers.js';
 import { DIFFICULTY, CELL_STATE, GAME_STATUS } from '../utils/constants.js';
 
@@ -136,24 +137,47 @@ export class Board {
   flagCell(row, col) {
     if (!this.isValidCell(row, col)) return null;
     if (this.gameOver) return null;
-    
+
     const cell = this.grid[row][col];
-    
+
     if (cell.isRevealed()) return null;
-    
+
     const changed = cell.flag();
-    
+
     if (changed) {
       const flaggedCount = this.grid.flat().filter(c => c.hasFlag()).length;
-      if (checkWinCondition(this.grid, this.totalMines) && flaggedCount === this.totalMines) {
-        this.gameOver = true;
-        this.status = GAME_STATUS.WON;
-        return { type: 'win', cell, flaggedCount };
+
+      if (flaggedCount === this.totalMines) {
+        const allCorrect = checkAllFlagsCorrect(this.grid, this.totalMines);
+        if (allCorrect) {
+          this.gameOver = true;
+          this.status = GAME_STATUS.WON;
+          return { type: 'win', cell, flaggedCount, allCorrect: true };
+        } else {
+          this.gameOver = true;
+          this.status = GAME_STATUS.LOST;
+          const wrongFlags = this.getWrongFlags();
+          return { type: 'lose', cell, flaggedCount, allCorrect: false, wrongFlags };
+        }
       }
+
       return { type: 'flag', cell, changed, flaggedCount };
     }
-    
+
     return null;
+  }
+
+  getWrongFlags() {
+    const wrongFlags = [];
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.cols; c++) {
+        const cell = this.grid[r][c];
+        if (cell.hasFlag() && !cell.hasMine) {
+          wrongFlags.push(cell);
+        }
+      }
+    }
+    return wrongFlags;
   }
 
   getCell(row, col) {

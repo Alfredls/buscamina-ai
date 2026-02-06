@@ -1,0 +1,129 @@
+@import './_variables.css';
+
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  z-index: 1000;
+}
+
+.taskbar__start {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: 2px outset #c0c0c0;
+  background: #c0c0c0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: var(--font-retro);
+  height: 30px;
+
+  svg {
+    width: fit-content;
+    height: 25px;
+  }
+}
+
+.taskbar__start:active {
+  border: 2px inset #c0c0c0;
+}
+
+.taskbar__start-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.taskbar__divider {
+  width: 2px;
+  height: 20px;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  margin: 0 4px;
+}
+
+.taskbar__tray {
+  margin-left: auto;
+  padding: 2px 10px;
+  border: 2px inset #c0c0c0;
+  background: #c0c0c0;
+  font-size: 14px;
+  font-family: var(--font-retro);
+  min-width: 70px;
+  text-align: center;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.taskbar__app-button {
+  padding: 2px 8px;
+  border: 2px outset #c0c0c0;
+  background: #c0c0c0;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--font-retro);
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.taskbar__app-button:active {
+  border: 2px inset #c0c0c0;
+}
+
+.taskbar__app-button--active {
+  border: 2px inset #c0c0c0;
+  background: #a0a0a0;
+}
+
+.desktop-icons {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 10;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  cursor: pointer;
+  padding: 4px;
+  border: 1px solid transparent;
+}
+
+.desktop-icon:hover {
+  border: 1px dotted #ffffff;
+  background-color: rgba(0, 0, 128, 0.3);
+}
+
+.desktop-icon__image {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.desktop-icon__label {
+  font-size: 11px;
+  text-align: center;
+  margin-top: 4px;
+  color: white;
+  text-shadow: 1px 1px #000;
+  font-family: var(--font-retro);
+  line-height: 1.2;
+}

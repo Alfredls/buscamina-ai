@@ -45,18 +45,21 @@ export class Game {
 
   flag(row, col) {
     if (!this.board) return null;
-    
+
     const result = this.board.flagCell(row, col);
-    
+
     if (result) {
       this.emit('flag', result);
-      
+
       if (result.type === 'win') {
         this.stopTimer();
         this.emit('gameover', { won: true });
+      } else if (result.type === 'lose') {
+        this.stopTimer();
+        this.emit('gameover', { won: false, type: 'lose', wrongFlags: result.wrongFlags });
       }
     }
-    
+
     return result;
   }
 
