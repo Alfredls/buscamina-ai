@@ -1,11 +1,8 @@
 import { Cell } from './Cell.js';
 import { 
-  createEmptyBoard, 
-  placeMines, 
-  calculateAdjacentMines,
+  countAdjacentMines,
   getNeighbors,
-  checkWinCondition,
-  getBoardDimensions
+  checkWinCondition
 } from '../utils/helpers.js';
 import { DIFFICULTY, CELL_STATE, GAME_STATUS } from '../utils/constants.js';
 
@@ -20,24 +17,43 @@ export class Board {
     this.status = GAME_STATUS.READY;
   }
 
-  initialize(excludeRow = null, excludeCol = null) {
-    this.grid = createEmptyBoard(this.rows, this.cols);
-    this.placeMinesSafe(excludeRow, excludeCol);
+  initialize() {
+    this.grid = [];
+    for (let r = 0; r < this.rows; r++) {
+      const row = [];
+      for (let c = 0; c < this.cols; c++) {
+        row.push(new Cell(r, c));
+      }
+      this.grid.push(row);
+    }
     this.firstClick = true;
     this.gameOver = false;
     this.status = GAME_STATUS.READY;
   }
 
-  placeMinesSafe(excludeRow, excludeCol) {
-    let excludeR = excludeRow;
-    let excludeC = excludeCol;
+  placeMines(excludeRow, excludeCol) {
+    let placed = 0;
     
-    if (excludeR === null || excludeC === null) {
-      excludeR = Math.floor(Math.random() * this.rows);
-      excludeC = Math.floor(Math.random() * this.cols);
+    while (placed < this.totalMines) {
+      const r = Math.floor(Math.random() * this.rows);
+      const c = Math.floor(Math.random() * this.cols);
+      
+      const isExcluded = (r === excludeRow && c === excludeCol) ||
+                         this.grid[r][c].hasMine;
+      
+      if (!isExcluded) {
+        this.grid[r][c].hasMine = true;
+        placed++;
+      }
     }
     
-    placeMines(this.grid, excludeR, excludeC, this.totalMines);
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.cols; c++) {
+        if (!this.grid[r][c].hasMine) {
+          this.grid[r][c].adjacentMines = countAdjacentMines(this.grid, r, c);
+        }
+      }
+    }
   }
 
   clickCell(row, col) {
@@ -101,25 +117,16 @@ export class Board {
     const changed = cell.flag();
     
     if (changed) {
-      const flaggedCount = this.countFlagged();
+      const flaggedCount = this.grid.flat().filter(c => c.hasFlag()).length;
       if (checkWinCondition(this.grid, this.totalMines) && flaggedCount === this.totalMines) {
         this.gameOver = true;
         this.status = GAME_STATUS.WON;
         return { type: 'win', cell, flaggedCount };
       }
+      return { type: 'flag', cell, changed, flaggedCount };
     }
     
-    return { type: 'flag', cell, changed, flaggedCount: this.countFlagged() };
-  }
-
-  countFlagged() {
-    let count = 0;
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.cols; c++) {
-        if (this.grid[r][c].hasFlag()) count++;
-      }
-    }
-    return count;
+    return null;
   }
 
   getCell(row, col) {
@@ -145,7 +152,7 @@ export class Board {
       rows: this.rows,
       cols: this.cols,
       totalMines: this.totalMines,
-      flaggedCount: this.countFlagged(),
+      flaggedCount: this.grid.flat().filter(c => c.hasFlag()).length,
       hiddenCount: this.grid.flat().filter(c => c.state === CELL_STATE.HIDDEN).length,
       status: this.status,
       isGameOver: this.gameOver

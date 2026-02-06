@@ -19,8 +19,8 @@ export class Game {
     this.emit('init', this.board.getStats());
   }
 
-  start() {
-    this.board.placeMinesSafe();
+  start(excludeRow, excludeCol) {
+    this.board.placeMines(excludeRow, excludeCol);
     this.emit('start', this.board.getStats());
   }
 

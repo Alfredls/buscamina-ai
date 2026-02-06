@@ -2,12 +2,12 @@ export class CounterComponent {
   constructor(initialValue = 0) {
     this.value = initialValue;
     this.element = this.createElement();
+    this.updateDisplay();
   }
 
   createElement() {
     const div = document.createElement('div');
     div.className = 'counter';
-    this.updateDisplay();
     return div;
   }
 

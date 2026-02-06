@@ -20,9 +20,9 @@ class App {
   }
 
   init() {
+    this.bindGameEvents();
     this.game.init(DIFFICULTY.BEGINNER);
     this.render();
-    this.bindGameEvents();
   }
 
   render() {
@@ -131,7 +131,7 @@ class App {
     const stats = this.game.board.getStats();
     
     if (stats.status === 'ready') {
-      this.game.board.placeMinesSafe(row, col);
+      this.game.board.placeMines(row, col);
       this.game.startTimer();
     }
     

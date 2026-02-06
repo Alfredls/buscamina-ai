@@ -8,7 +8,6 @@ export class TimerComponent {
   createElement() {
     const div = document.createElement('div');
     div.className = 'timer';
-    this.updateDisplay();
     return div;
   }
 
