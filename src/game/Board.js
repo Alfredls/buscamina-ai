@@ -194,14 +194,18 @@ export class Board {
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         const cell = this.grid[r][c];
-        
+
         if (cell.hasMine) {
           if (!cell.hasFlag()) {
+            cell.wasFlagged = cell.hasFlag();
             cell.state = CELL_STATE.REVEALED;
             result.mines.push(cell);
+          } else {
+            cell.wasFlagged = true;
           }
         } else {
           if (cell.hasFlag()) {
+            cell.wasFlagged = true;
             cell.state = CELL_STATE.REVEALED;
             result.wrongFlags.push(cell);
           } else if (cell.state === CELL_STATE.HIDDEN) {

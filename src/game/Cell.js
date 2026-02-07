@@ -8,13 +8,14 @@ export class Cell {
     this.hasMine = false;
     this.adjacentMines = 0;
     this.element = null;
+    this.wasFlagged = false;
   }
 
   reveal() {
     if (this.state === CELL_STATE.FLAGGED || this.state === CELL_STATE.REVEALED) {
       return false;
     }
-    
+
     this.state = CELL_STATE.REVEALED;
     return true;
   }
@@ -23,11 +24,13 @@ export class Cell {
     if (this.state === CELL_STATE.REVEALED) {
       return false;
     }
-    
+
     if (this.state === CELL_STATE.FLAGGED) {
       this.state = CELL_STATE.HIDDEN;
+      this.wasFlagged = false;
     } else {
       this.state = CELL_STATE.FLAGGED;
+      this.wasFlagged = true;
     }
     return true;
   }
@@ -37,7 +40,7 @@ export class Cell {
   }
 
   hasFlag() {
-    return this.state === CELL_STATE.FLAGGED;
+    return this.state === CELL_STATE.FLAGGED || this.wasFlagged;
   }
 
   isHidden() {
