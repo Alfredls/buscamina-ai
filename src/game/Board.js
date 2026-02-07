@@ -5,17 +5,19 @@ import {
   checkWinCondition,
   checkAllFlagsCorrect
 } from '../utils/helpers.js';
-import { DIFFICULTY, CELL_STATE, GAME_STATUS } from '../utils/constants.js';
+import { DIFFICULTY, CELL_STATE, GAME_STATUS, HELP_CONFIG } from '../utils/constants.js';
 
 export class Board {
   constructor(difficulty = DIFFICULTY.BEGINNER) {
     this.rows = difficulty.rows;
     this.cols = difficulty.cols;
     this.totalMines = difficulty.mines;
+    this.helpPercent = difficulty.helpPercent;
     this.grid = [];
     this.firstClick = true;
     this.gameOver = false;
     this.status = GAME_STATUS.READY;
+    this.usedHelps = [];
   }
 
   initialize() {
@@ -227,7 +229,94 @@ export class Board {
       flaggedCount: this.grid.flat().filter(c => c.hasFlag()).length,
       hiddenCount: this.grid.flat().filter(c => c.state === CELL_STATE.HIDDEN).length,
       status: this.status,
-      isGameOver: this.gameOver
+      isGameOver: this.gameOver,
+      helpPercent: this.helpPercent
+    };
+  }
+
+  getHelpStats() {
+    const availableHelps = this.calculateAvailableHelps();
+    const bombHelps = Math.round(availableHelps * HELP_CONFIG.bombPercent / 100);
+    const safeHelps = availableHelps - bombHelps;
+    return {
+      total: availableHelps,
+      bombs: bombHelps,
+      safe: safeHelps,
+      used: this.usedHelps.length,
+      remaining: availableHelps - this.usedHelps.length
+    };
+  }
+
+  calculateAvailableHelps() {
+    const eligibleMines = Math.round(this.totalMines * this.helpPercent / 100);
+    return Math.max(1, eligibleMines);
+  }
+
+  getAvailableBombCells() {
+    const cells = [];
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.cols; c++) {
+        const cell = this.grid[r][c];
+        if (cell.hasMine && cell.isHidden() && !this.usedHelps.some(h => h.row === r && h.col === c)) {
+          cells.push({ row: r, col: c, cell });
+        }
+      }
+    }
+    return cells;
+  }
+
+  getAvailableSafeCells() {
+    const cells = [];
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.cols; c++) {
+        const cell = this.grid[r][c];
+        if (!cell.hasMine && cell.isHidden() && !this.usedHelps.some(h => h.row === r && h.col === c)) {
+          cells.push({ row: r, col: c, cell });
+        }
+      }
+    }
+    return cells;
+  }
+
+  useHelp(type) {
+    if (this.gameOver) return null;
+    if (this.usedHelps.length >= this.calculateAvailableHelps()) return null;
+
+    const availableHelps = this.calculateAvailableHelps();
+    const bombHelps = Math.round(availableHelps * HELP_CONFIG.bombPercent / 100);
+
+    const usedBombs = this.usedHelps.filter(h => h.type === 'bomb').length;
+    const usedSafe = this.usedHelps.filter(h => h.type === 'safe').length;
+
+    if (type === 'bomb' && usedBombs >= bombHelps) return null;
+    if (type === 'safe' && usedSafe >= (availableHelps - bombHelps)) return null;
+
+    let cells;
+    if (type === 'bomb') {
+      cells = this.getAvailableBombCells();
+    } else {
+      cells = this.getAvailableSafeCells();
+    }
+
+    if (cells.length === 0) return null;
+
+    const randomIndex = Math.floor(Math.random() * cells.length);
+    const selected = cells[randomIndex];
+
+    this.usedHelps.push({ row: selected.row, col: selected.col, type });
+
+    if (type === 'bomb') {
+      selected.cell.state = CELL_STATE.FLAGGED;
+      selected.cell.wasFlagged = true;
+    } else {
+      selected.cell.reveal();
+    }
+
+    return {
+      type,
+      cell: selected.cell,
+      row: selected.row,
+      col: selected.col
     };
   }
 

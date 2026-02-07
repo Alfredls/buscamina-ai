@@ -6,6 +6,7 @@ import { TimerComponent } from './components/Timer.js';
 import { GameStatusComponent } from './components/GameStatus.js';
 import { HiddenCounterComponent } from './components/HiddenCounter.js';
 import { ModalComponent } from './components/Modal.js';
+import { HelpModalComponent } from './components/HelpModal.js';
 import { Game } from './game/Game.js';
 import { DIFFICULTY, CELL_STATE } from './utils/constants.js';
 
@@ -20,9 +21,16 @@ class App {
       () => this.reset(),
       () => this.newGame()
     );
+    this.helpModal = new HelpModalComponent(
+      (type) => this.useHelp(type),
+      () => {}
+    );
     this.header = new HeaderComponent(this.counter, this.timer, this.gameStatus, this.hiddenCounter);
     this.board = null;
-    this.controls = new ControlsComponent((difficulty) => this.changeDifficulty(difficulty));
+    this.controls = new ControlsComponent(
+      (difficulty) => this.changeDifficulty(difficulty),
+      () => this.showHelpModal()
+    );
     this.appElement = document.getElementById('app');
     this.clockInterval = null;
     this.currentDifficulty = 'BEGINNER';
@@ -256,6 +264,41 @@ class App {
 
   newGame() {
     this.changeDifficulty(this.currentDifficulty);
+  }
+
+  showHelpModal() {
+    if (!this.game.board || this.game.board.gameOver) return;
+    const helpStats = this.game.getHelpStats();
+    if (helpStats && helpStats.remaining > 0) {
+      this.helpModal.show(helpStats);
+    }
+  }
+
+  useHelp(type) {
+    if (!this.game.board || this.game.board.gameOver) return;
+
+    const result = this.game.useHelp(type);
+
+    if (result) {
+      this.board.updateCell(result.row, result.col);
+
+      if (result.type === 'bomb') {
+        const stats = this.game.board.getStats();
+        const remainingMines = stats.totalMines - stats.flaggedCount;
+        this.counter.setValue(remainingMines);
+      } else {
+        const stats = this.game.board.getStats();
+        const hiddenNonMines = stats.hiddenCount - (this.game.board.totalMines - stats.flaggedCount);
+        this.hiddenCounter.setValue(Math.max(0, hiddenNonMines));
+      }
+
+      const newHelpStats = this.game.getHelpStats();
+      if (newHelpStats.remaining > 0) {
+        setTimeout(() => {
+          this.helpModal.show(newHelpStats);
+        }, 500);
+      }
+    }
   }
 
   changeDifficulty(difficulty) {

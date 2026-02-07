@@ -97,6 +97,38 @@ export class Game {
     return this.board ? this.board.getStats() : null;
   }
 
+  getHelpStats() {
+    return this.board ? this.board.getHelpStats() : null;
+  }
+
+  useHelp(type) {
+    if (!this.board) return null;
+
+    const result = this.board.useHelp(type);
+
+    if (result) {
+      this.emit('help', result);
+
+      if (result.type === 'bomb') {
+        this.emit('flag', {
+          type: 'flag',
+          cell: result.cell,
+          changed: true,
+          flaggedCount: this.board.getStats().flaggedCount
+        });
+      } else {
+        const stats = this.board.getStats();
+        const hiddenNonMines = stats.hiddenCount - (this.board.totalMines - stats.flaggedCount);
+        this.emit('click', {
+          type: 'reveal',
+          revealed: [result.cell]
+        });
+      }
+    }
+
+    return result;
+  }
+
   on(event, callback) {
     if (!this.listeners[event]) {
       this.listeners[event] = [];

@@ -37,3 +37,19 @@
   background-color: var(--color-window-dark);
   color: var(--color-window-light);
 }
+
+.controls__btn--help {
+  margin-left: 16px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.controls__help-text {
+  font-size: 13px;
+}
+
+.controls__btn--help:hover {
+  background-color: var(--color-window-light);
+}
