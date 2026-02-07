@@ -110,7 +110,7 @@ class App {
     divider.className = 'taskbar__divider';
 
     const appButton = document.createElement('button');
-    appButton.className = 'taskbar__app-button';
+    appButton.className = 'taskbar__app-button taskbar__button--active';
     appButton.innerHTML = `
       <span>💣</span>
       <span>Buscamina</span>
@@ -133,31 +133,16 @@ class App {
     icons.className = 'desktop-icons';
     icons.innerHTML = `
       <div class="desktop-icon">
-        <svg class="desktop-icon__image" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="28" height="24" rx="1" fill="#008080" stroke="#000" stroke-width="1"/>
-          <rect x="4" y="4" width="24" height="16" fill="#000080"/>
-          <rect x="6" y="18" width="20" height="6" fill="#c0c0c0"/>
-          <rect x="8" y="20" width="16" height="2" fill="#c0c0c0"/>
-        </svg>
+        <img src="/assets/my-computer.png" alt="Mi PC" class="desktop-icon__image" class="desktop-icon__image"/>
         <span class="desktop-icon__label">Mi PC</span>
       </div>
       <div class="desktop-icon">
-        <svg class="desktop-icon__image" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="4" y="2" width="24" height="26" rx="1" fill="#FFFF00" stroke="#000" stroke-width="1"/>
-          <rect x="6" y="4" width="20" height="2" fill="#FFD700"/>
-          <rect x="6" y="7" width="20" height="2" fill="#FFD700"/>
-          <rect x="6" y="10" width="16" height="2" fill="#FFD700"/>
-        </svg>
-        <span class="desktop-icon__label">Documentos</span>
+        <img src="/assets/recycle.png" alt="Reciclar" class="desktop-icon__image" class="desktop-icon__image"/>
+        <span class="desktop-icon__label">Reciclar</span>
       </div>
       <div class="desktop-icon">
-        <svg class="desktop-icon__image" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="4" y="4" width="24" height="24" rx="1" fill="#808080" stroke="#000" stroke-width="1"/>
-          <rect x="8" y="8" width="4" height="4" fill="#c0c0c0"/>
-          <rect x="14" y="10" width="10" height="2" fill="#c0c0c0"/>
-          <rect x="14" y="14" width="8" height="2" fill="#c0c0c0"/>
-        </svg>
-        <span class="desktop-icon__label">Papelera</span>
+        <img src="/assets/network.png" alt="Mi red" class="desktop-icon__image" class="desktop-icon__image"/>
+        <span class="desktop-icon__label">Red</span>
       </div>
     `;
     document.body.appendChild(icons);

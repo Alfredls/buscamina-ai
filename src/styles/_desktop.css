@@ -87,6 +87,14 @@
   background: #a0a0a0;
 }
 
+.taskbar__button--active {
+  border: 2px inset #c0c0c0;
+  background: #c9c9c9;
+  border-right: 2px inset #fff;
+  border-bottom: 2px inset #fff;
+}
+
+
 .desktop-icons {
   position: fixed;
   top: 10px;
@@ -113,13 +121,13 @@
 }
 
 .desktop-icon__image {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   image-rendering: pixelated;
 }
 
 .desktop-icon__label {
-  font-size: 11px;
+  font-size: 14px;
   text-align: center;
   margin-top: 4px;
   color: white;
