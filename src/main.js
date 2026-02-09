@@ -7,6 +7,7 @@ import { GameStatusComponent } from './components/GameStatus.js';
 import { HiddenCounterComponent } from './components/HiddenCounter.js';
 import { ModalComponent } from './components/Modal.js';
 import { HelpModalComponent } from './components/HelpModal.js';
+import { InstructionsModalComponent } from './components/InstructionsModal.js';
 import { Game } from './game/Game.js';
 import { DIFFICULTY, CELL_STATE } from './utils/constants.js';
 
@@ -25,11 +26,15 @@ class App {
       (type) => this.useHelp(type),
       () => {}
     );
+    this.instructionsModal = new InstructionsModalComponent(
+      () => {}
+    );
     this.header = new HeaderComponent(this.counter, this.timer, this.gameStatus, this.hiddenCounter);
     this.board = null;
     this.controls = new MenuBarComponent(
       (difficulty) => this.changeDifficulty(difficulty),
-      () => this.showHelpModal()
+      () => this.showHelpModal(),
+      () => this.showInstructionsModal()
     );
     this.appElement = document.getElementById('app');
     this.clockInterval = null;
@@ -272,6 +277,10 @@ class App {
     if (helpStats && helpStats.remaining > 0) {
       this.helpModal.show(helpStats);
     }
+  }
+
+  showInstructionsModal() {
+    this.instructionsModal.show();
   }
 
   useHelp(type) {

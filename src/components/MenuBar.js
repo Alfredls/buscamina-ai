@@ -1,7 +1,8 @@
 export class MenuBarComponent {
-  constructor(onDifficultyChange, onHelpClick) {
+  constructor(onDifficultyChange, onHelpClick, onInstructionsClick) {
     this.onDifficultyChange = onDifficultyChange;
     this.onHelpClick = onHelpClick;
+    this.onInstructionsClick = onInstructionsClick;
     this.currentDifficulty = 'BEGINNER';
     this.openMenu = null;
     this.element = this.createElement();
@@ -23,7 +24,8 @@ export class MenuBarComponent {
 
     const ayuda = this.createMenuItem('Ayuda', 'ayuda');
     const ayudaDropdown = this.createDropdown('ayuda', [
-      { key: 'help', label: 'Ayuda' }
+      { key: 'help', label: 'Ayuda' },
+      { key: 'instructions', label: 'Cómo jugar' }
     ]);
     nav.appendChild(ayuda);
     nav.appendChild(ayudaDropdown);
@@ -71,6 +73,8 @@ export class MenuBarComponent {
         const action = option.dataset.action;
         if (action === 'help') {
           this.onHelpClick();
+        } else if (action === 'instructions') {
+          this.onInstructionsClick();
         } else {
           this.setActiveDifficulty(action);
           this.onDifficultyChange(action);
