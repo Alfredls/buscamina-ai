@@ -1,9 +1,10 @@
 @import './_variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 
 .mine-counter {
   background-color: #000;
   color: var(--color-red);
-  font-family: var(--font-pixel);
+  font-family: "Orbitron", sans-serif;
   font-size: 14px;
   padding: 4px 8px;
   border: 2px solid var(--color-window-dark);
@@ -11,6 +12,7 @@
   border-bottom-color: var(--color-window-light);
   min-width: 80px;
   text-align: center;
+  font-weight: bold;
 }
 
 .mine-counter__label {

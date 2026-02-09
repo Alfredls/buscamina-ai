@@ -1,9 +1,10 @@
 @import './_variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 
 .timer {
   background-color: #000;
   color: var(--color-red);
-  font-family: var(--font-pixel);
+  font-family: "Orbitron", sans-serif;
   font-size: 20px;
   padding: 4px 8px;
   border: 2px solid var(--color-window-dark);
@@ -12,4 +13,5 @@
   min-width: 60px;
   text-align: center;
   letter-spacing: 2px;
+  font-weight: bold;
 }
