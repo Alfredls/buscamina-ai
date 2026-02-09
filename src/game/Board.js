@@ -5,14 +5,14 @@ import {
   checkWinCondition,
   checkAllFlagsCorrect
 } from '../utils/helpers.js';
-import { DIFFICULTY, CELL_STATE, GAME_STATUS, HELP_CONFIG } from '../utils/constants.js';
+import { DIFFICULTY, CELL_STATE, GAME_STATUS } from '../utils/constants.js';
 
 export class Board {
   constructor(difficulty = DIFFICULTY.BEGINNER) {
     this.rows = difficulty.rows;
     this.cols = difficulty.cols;
     this.totalMines = difficulty.mines;
-    this.helpPercent = difficulty.helpPercent;
+    this.helpCount = difficulty.helpCount;
     this.grid = [];
     this.firstClick = true;
     this.gameOver = false;
@@ -230,26 +230,21 @@ export class Board {
       hiddenCount: this.grid.flat().filter(c => c.state === CELL_STATE.HIDDEN).length,
       status: this.status,
       isGameOver: this.gameOver,
-      helpPercent: this.helpPercent
+      helpCount: this.helpCount
     };
   }
 
   getHelpStats() {
-    const availableHelps = this.calculateAvailableHelps();
-    const bombHelps = Math.round(availableHelps * HELP_CONFIG.bombPercent / 100);
-    const safeHelps = availableHelps - bombHelps;
     return {
-      total: availableHelps,
-      bombs: bombHelps,
-      safe: safeHelps,
+      total: this.helpCount,
+      bombs: this.helpCount,
       used: this.usedHelps.length,
-      remaining: availableHelps - this.usedHelps.length
+      remaining: this.helpCount - this.usedHelps.length
     };
   }
 
   calculateAvailableHelps() {
-    const eligibleMines = Math.round(this.totalMines * this.helpPercent / 100);
-    return Math.max(1, eligibleMines);
+    return this.helpCount;
   }
 
   getAvailableBombCells() {
@@ -266,37 +261,16 @@ export class Board {
   }
 
   getAvailableSafeCells() {
-    const cells = [];
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.cols; c++) {
-        const cell = this.grid[r][c];
-        if (!cell.hasMine && cell.isHidden() && !this.usedHelps.some(h => h.row === r && h.col === c)) {
-          cells.push({ row: r, col: c, cell });
-        }
-      }
-    }
-    return cells;
+    return [];
   }
 
   useHelp(type) {
     if (this.gameOver) return null;
-    if (this.usedHelps.length >= this.calculateAvailableHelps()) return null;
+    if (this.usedHelps.length >= this.helpCount) return null;
 
-    const availableHelps = this.calculateAvailableHelps();
-    const bombHelps = Math.round(availableHelps * HELP_CONFIG.bombPercent / 100);
+    if (type !== 'bomb') return null;
 
-    const usedBombs = this.usedHelps.filter(h => h.type === 'bomb').length;
-    const usedSafe = this.usedHelps.filter(h => h.type === 'safe').length;
-
-    if (type === 'bomb' && usedBombs >= bombHelps) return null;
-    if (type === 'safe' && usedSafe >= (availableHelps - bombHelps)) return null;
-
-    let cells;
-    if (type === 'bomb') {
-      cells = this.getAvailableBombCells();
-    } else {
-      cells = this.getAvailableSafeCells();
-    }
+    const cells = this.getAvailableBombCells();
 
     if (cells.length === 0) return null;
 
@@ -305,18 +279,47 @@ export class Board {
 
     this.usedHelps.push({ row: selected.row, col: selected.col, type });
 
-    if (type === 'bomb') {
-      selected.cell.state = CELL_STATE.FLAGGED;
-      selected.cell.wasFlagged = true;
-    } else {
-      selected.cell.reveal();
+    selected.cell.state = CELL_STATE.FLAGGED;
+    selected.cell.wasFlagged = true;
+    selected.cell.isHelpFlag = true;
+
+    const flaggedCount = this.grid.flat().filter(c => c.hasFlag()).length;
+
+    if (flaggedCount === this.totalMines) {
+      const allCorrect = checkAllFlagsCorrect(this.grid, this.totalMines);
+      if (allCorrect) {
+        this.gameOver = true;
+        this.status = GAME_STATUS.WON;
+        return {
+          type,
+          cell: selected.cell,
+          row: selected.row,
+          col: selected.col,
+          gameOver: true,
+          won: true
+        };
+      } else {
+        this.gameOver = true;
+        this.status = GAME_STATUS.LOST;
+        const wrongFlags = this.getWrongFlags();
+        return {
+          type,
+          cell: selected.cell,
+          row: selected.row,
+          col: selected.col,
+          gameOver: true,
+          won: false,
+          wrongFlags
+        };
+      }
     }
 
     return {
       type,
       cell: selected.cell,
       row: selected.row,
-      col: selected.col
+      col: selected.col,
+      flaggedCount
     };
   }
 

@@ -192,7 +192,7 @@ class App {
     this.game.on('flag', (result) => {
       if (result.type === 'flag') {
         this.board.updateCell(result.cell.row, result.cell.col);
-        const remainingMines = this.game.board.totalMines - result.flaggedCount;
+        const remainingMines = Math.max(0, this.game.board.totalMines - result.flaggedCount);
         this.counter.setValue(remainingMines);
       }
     });
@@ -284,12 +284,32 @@ class App {
 
       if (result.type === 'bomb') {
         const stats = this.game.board.getStats();
-        const remainingMines = stats.totalMines - stats.flaggedCount;
+        const remainingMines = Math.max(0, stats.totalMines - stats.flaggedCount);
         this.counter.setValue(remainingMines);
-      } else {
-        const stats = this.game.board.getStats();
-        const hiddenNonMines = stats.hiddenCount - (this.game.board.totalMines - stats.flaggedCount);
-        this.hiddenCounter.setValue(Math.max(0, hiddenNonMines));
+
+        if (result.gameOver) {
+          if (result.won) {
+            this.gameStatus.setStatus('won');
+            this.game.stopTimer();
+            const revealResult = this.game.board.revealAllMines();
+            this.board.revealCells(revealResult.safeCells);
+            this.hiddenCounter.setValue(0);
+            setTimeout(() => {
+              this.modal.show(true, '¡Felicitarias! Encontraste todas las minas.');
+            }, 500);
+          } else {
+            this.gameStatus.setStatus('lost');
+            this.game.stopTimer();
+            const revealResult = this.game.board.revealAllMines();
+            this.board.revealCells(revealResult.mines);
+            this.board.revealCells(revealResult.safeCells);
+            this.board.revealCells(result.wrongFlags);
+            setTimeout(() => {
+              this.modal.show(false, '¡Perdiste! Tenías banderas en lugares incorrectos.');
+            }, 500);
+          }
+          return;
+        }
       }
 
       const newHelpStats = this.game.getHelpStats();

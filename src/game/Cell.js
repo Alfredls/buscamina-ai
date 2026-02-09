@@ -9,6 +9,7 @@ export class Cell {
     this.adjacentMines = 0;
     this.element = null;
     this.wasFlagged = false;
+    this.isHelpFlag = false;
   }
 
   reveal() {

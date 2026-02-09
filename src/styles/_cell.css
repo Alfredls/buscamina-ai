@@ -37,6 +37,12 @@
 
 .cell--flagged {
   color: var(--color-flag);
+  text-shadow: 0 0 0 var(--color-flag);
+}
+
+.cell--help-flag {
+  color: transparent;
+  text-shadow: 0 0 0 #ffff00;
 }
 
 .cell--wrong-flag {

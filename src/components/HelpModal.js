@@ -23,7 +23,7 @@ export class HelpModalComponent {
 
     const title = document.createElement('span');
     title.className = 'help-modal__title';
-    title.textContent = 'Ayuda - Pistas';
+    title.textContent = 'Ayuda - Descubrir Mina';
 
     const closeBtn = document.createElement('button');
     closeBtn.className = 'help-modal__close';
@@ -38,45 +38,25 @@ export class HelpModalComponent {
 
     const summary = document.createElement('p');
     summary.className = 'help-modal__summary';
-    summary.textContent = `Pistas restantes: ${helpStats.remaining} de ${helpStats.total}`;
+    summary.textContent = `Descubrir Mina: ${helpStats.remaining} de ${helpStats.total}`;
 
     const options = document.createElement('div');
     options.className = 'help-modal__options';
 
-    const usedBombs = helpStats.used - (helpStats.bombs > 0 ? Math.max(0, helpStats.used - (helpStats.total - helpStats.bombs)) : 0);
-    const usedSafe = helpStats.used - (helpStats.total - helpStats.bombs > 0 ? Math.max(0, helpStats.used - helpStats.bombs) : 0);
-
-    const remainingBombs = Math.max(0, helpStats.bombs - usedBombs);
-    const remainingSafe = Math.max(0, helpStats.safe - usedSafe);
-
     const bombBtn = document.createElement('button');
     bombBtn.className = 'help-modal__option';
-    bombBtn.disabled = remainingBombs <= 0 || helpStats.remaining <= 0;
+    bombBtn.disabled = helpStats.remaining <= 0;
     bombBtn.innerHTML = `
       <span class="help-modal__option-icon">🚩</span>
       <span class="help-modal__option-text">Descubrir Mina</span>
-      <span class="help-modal__option-count">${remainingBombs}</span>
+      <span class="help-modal__option-count">${helpStats.remaining}</span>
     `;
     bombBtn.addEventListener('click', () => {
       this.remove();
       this.onUseHelp('bomb');
     });
 
-    const safeBtn = document.createElement('button');
-    safeBtn.className = 'help-modal__option';
-    safeBtn.disabled = remainingSafe <= 0 || helpStats.remaining <= 0;
-    safeBtn.innerHTML = `
-      <span class="help-modal__option-icon">✅</span>
-      <span class="help-modal__option-text">Celda Segura</span>
-      <span class="help-modal__option-count">${remainingSafe}</span>
-    `;
-    safeBtn.addEventListener('click', () => {
-      this.remove();
-      this.onUseHelp('safe');
-    });
-
     options.appendChild(bombBtn);
-    options.appendChild(safeBtn);
 
     content.appendChild(summary);
     content.appendChild(options);

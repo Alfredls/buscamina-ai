@@ -63,6 +63,9 @@ export class CellComponent {
 
       case CELL_STATE.FLAGGED:
         this.element.classList.add('cell--flagged');
+        if (this.cell.isHelpFlag) {
+          this.element.classList.add('cell--help-flag');
+        }
         this.element.textContent = ICONS.FLAG;
         break;
 

@@ -3,25 +3,20 @@ export const DIFFICULTY = {
     rows: 9,
     cols: 9,
     mines: 10,
-    helpPercent: 50
+    helpCount: 3
   },
   INTERMEDIATE: {
     rows: 16,
     cols: 16,
     mines: 40,
-    helpPercent: 30
+    helpCount: 12
   },
   ADVANCED: {
     rows: 16,
     cols: 30,
     mines: 99,
-    helpPercent: 25
+    helpCount: 28
   }
-};
-
-export const HELP_CONFIG = {
-  bombPercent: 20,
-  safePercent: 80
 };
 
 export const CELL_STATE = {
