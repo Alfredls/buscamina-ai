@@ -18,7 +18,7 @@ export class HeaderComponent {
     const centerSection = document.createElement('div');
     centerSection.className = 'header__section';
     centerSection.appendChild(this.gameStatus.getElement());
-    centerSection.appendChild(this.hiddenCounter.getElement());
+    //centerSection.appendChild(this.hiddenCounter.getElement());
     
     const rightSection = document.createElement('div');
     rightSection.className = 'header__section';

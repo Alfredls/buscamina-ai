@@ -1,6 +1,6 @@
 import { BoardComponent } from './components/Board.js';
 import { HeaderComponent } from './components/Header.js';
-import { ControlsComponent } from './components/Controls.js';
+import { MenuBarComponent } from './components/MenuBar.js';
 import { CounterComponent } from './components/Counter.js';
 import { TimerComponent } from './components/Timer.js';
 import { GameStatusComponent } from './components/GameStatus.js';
@@ -27,7 +27,7 @@ class App {
     );
     this.header = new HeaderComponent(this.counter, this.timer, this.gameStatus, this.hiddenCounter);
     this.board = null;
-    this.controls = new ControlsComponent(
+    this.controls = new MenuBarComponent(
       (difficulty) => this.changeDifficulty(difficulty),
       () => this.showHelpModal()
     );
@@ -82,8 +82,8 @@ class App {
     titleBar.appendChild(controlsDiv);
 
     gameWindow.appendChild(titleBar);
-    gameWindow.appendChild(this.header.getElement());
     gameWindow.appendChild(this.controls.getElement());
+    gameWindow.appendChild(this.header.getElement());
 
     this.board = new BoardComponent(
       this.game.board,
